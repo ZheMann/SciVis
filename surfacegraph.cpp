@@ -82,33 +82,20 @@ void SurfaceGraph::enableSqrtSinModel(bool enable)
 {
     if (enable) {
         m_sqrtSinSeries->setDrawMode(QSurface3DSeries::DrawSurface);
-        m_sqrtSinSeries->setFlatShadingEnabled(false);
+        m_sqrtSinSeries->setFlatShadingEnabled(true);
 
-        m_graph->axisX()->setLabelFormat("%.2f");
-        m_graph->axisZ()->setLabelFormat("%.2f");
-        m_graph->axisX()->setRange(sampleMin, sampleMax);
-        m_graph->axisY()->setRange(0.0f, 2.0f);
-        m_graph->axisZ()->setRange(sampleMin, sampleMax);
-        m_graph->axisX()->setLabelAutoRotation(30);
-        m_graph->axisY()->setLabelAutoRotation(90);
-        m_graph->axisZ()->setLabelAutoRotation(30);
+        m_graph->axisX()->setRange(.0f, 50.0f);
+        m_graph->axisY()->setRange(.0f, 20.0f);
+        m_graph->axisZ()->setRange(.0f, 50.0f);
+        m_graph->setAspectRatio(20);
 
+        //Set current data remove other
         m_graph->removeSeries(m_heightMapSeries);
         m_graph->addSeries(m_sqrtSinSeries);
 
-        // Reset range sliders for Sqrt&Sin
-        m_rangeMinX = sampleMin;
-        m_rangeMinZ = sampleMin;
-        m_stepX = (sampleMax - sampleMin) / float(sampleCountX - 1);
-        m_stepZ = (sampleMax - sampleMin) / float(sampleCountZ - 1);
-        m_axisMinSliderX->setMaximum(sampleCountX - 2);
-        m_axisMinSliderX->setValue(0);
-        m_axisMaxSliderX->setMaximum(sampleCountX - 1);
-        m_axisMaxSliderX->setValue(sampleCountX - 1);
-        m_axisMinSliderZ->setMaximum(sampleCountZ - 2);
-        m_axisMinSliderZ->setValue(0);
-        m_axisMaxSliderZ->setMaximum(sampleCountZ - 1);
-        m_axisMaxSliderZ->setValue(sampleCountZ - 1);
+        m_graph->axisX()->setLabelAutoRotation(30);
+        m_graph->axisY()->setLabelAutoRotation(90);
+        m_graph->axisZ()->setLabelAutoRotation(30);
     }
 }
 

@@ -5,7 +5,7 @@
 
 #include <QtCore/qmath.h>
 
-const int grid_size = 50;			//size of simulation grid
+const int grid_size = 100;			//size of simulation grid
 
 Simulation::Simulation()
 {
