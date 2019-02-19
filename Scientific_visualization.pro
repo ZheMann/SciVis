@@ -181,7 +181,8 @@ SOURCES += \
     simulation.cpp \
     surfacegraph.cpp \
     visualization.cpp \
-    simulationdata.cpp
+    simulationdata.cpp \
+    inputhandler.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -195,7 +196,8 @@ HEADERS += \
     simulation.h \
     surfacegraph.h \
     visualization.h \
-    simulationdata.h
+    simulationdata.h \
+    inputhandler.h
 
 FORMS += \
         mainwindow.ui

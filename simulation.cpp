@@ -171,12 +171,14 @@ void Simulation::set_input_force_x(int x,int y)
 {
     int index = (x) + (y * grid_size);
     fx[index] = 10;
+    rho[index] = 15.0f;
 }
 
 void Simulation::set_input_force_y(int x,int y)
 {
     int index = (x) + (y * grid_size);
     fy[index] = 10;
+    rho[index] = 15.0f;
 }
 
 

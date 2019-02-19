@@ -18,6 +18,7 @@
 
 #include "simulation.h"
 #include "visualization.h"
+#include "inputhandler.h"
 
 using namespace QtDataVisualization;
 
@@ -27,14 +28,7 @@ int main(int argc, char **argv)
     Q3DSurface *graph = new Q3DSurface();
     QWidget *container = QWidget::createWindowContainer(graph);
 
-    //Add custom input handler
-    //todo: replace with custom class that creates custom actions based on the inputs
-
-    Q3DInputHandler *input_handler = new Q3DInputHandler();
-    /*
-    input_handler->setRotationEnabled(false);
-    input_handler->setZoomEnabled(false);
-    */
+    InputHandler *input_handler = new InputHandler();
     graph->setActiveInputHandler(input_handler);
 
     //Example code for displaying the graph

@@ -2,8 +2,11 @@
 #define INPUTHANDLER_H
 
 #include <QObject>
+#include <QtDataVisualization/Q3DInputHandler>
 
-class InputHandler : public QObject
+using namespace QtDataVisualization;
+
+class InputHandler : public Q3DInputHandler
 {
     Q_OBJECT
 public:

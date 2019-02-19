@@ -4,6 +4,7 @@
 #include <QtDataVisualization/Q3DTheme>
 #include <QtDataVisualization/Q3DCamera>
 #include <QtDataVisualization/Q3DInputHandler>
+#include <QtDataVisualization/QAbstract3DGraph>
 #include <QtGui/QImage>
 #include <QtCore/qmath.h>
 
@@ -81,12 +82,17 @@ void SurfaceGraph::fillSqrtSinProxy()
 void SurfaceGraph::enableSqrtSinModel(bool enable)
 {
     if (enable) {
-        m_sqrtSinSeries->setDrawMode(QSurface3DSeries::DrawSurface);
-        m_sqrtSinSeries->setFlatShadingEnabled(true);
+        m_sqrtSinSeries->setDrawMode(QSurface3DSeries::DrawSurfaceAndWireframe);
+        m_sqrtSinSeries->setItemLabelVisible(false);
+        m_sqrtSinSeries->setFlatShadingEnabled(false);
+
 
         m_graph->axisX()->setRange(.0f, 50.0f);
-        m_graph->axisY()->setRange(.0f, 20.0f);
+        m_graph->axisY()->setRange(.0f, 10.0f);
         m_graph->axisZ()->setRange(.0f, 50.0f);
+        m_graph->setShadowQuality(QAbstract3DGraph::ShadowQualityNone);
+        m_graph->setReflection(false);
+
         m_graph->setAspectRatio(20);
 
         //Set current data remove other

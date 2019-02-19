@@ -22,18 +22,18 @@ void Visualization::Start()
     connect(timer, SIGNAL(timeout()),
             this, SLOT(Update()));
 
-    timer->start(1000/40);
+    timer->start(1000/30);
+
+
 }
 
 void Visualization::Update()
 {
+    //Apply demo forces
     int i,j;
-    for(int i =0; i < 5; i++){
-        for(int j = 0; j < 5; j++)
-        {
-            simulation->set_input_force_x(i*2,0);
-            simulation->set_input_force_y(0,j * 4 -1);
-        }
+    for(int i =0; i < 25; i++){
+        simulation->set_input_force_x(i*2,0);
+        simulation->set_input_force_y(0,i * 4 -1);
     }
 
     //Simulation and visualization
