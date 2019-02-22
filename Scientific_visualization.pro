@@ -177,7 +177,6 @@ SOURCES += \
     fftw-2.1.3/rfftw/rfftwnd.c \
     fftw-2.1.3/rfftw/rgeneric.c \
     fftw-2.1.3/rfftw/rplanner.c \
-    fluids.c \
     simulation.cpp \
     surfacegraph.cpp \
     visualization.cpp \

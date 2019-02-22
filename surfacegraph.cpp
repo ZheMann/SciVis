@@ -36,12 +36,16 @@ SurfaceGraph::SurfaceGraph(Q3DSurface *surface)
     m_heightMapWidth = heightMapImage.width();
     m_heightMapHeight = heightMapImage.height();
 
-    /*
+
     surface ->setOrthoProjection(true);
     surface->setFlipHorizontalGrid(true);
     surface->setHorizontalAspectRatio(1);
     surface -> scene()->activeCamera()->setCameraPreset(Q3DCamera::CameraPresetDirectlyAbove);
-    */
+    surface ->setReflection(false);
+    surface ->setReflectivity(0);
+    surface->activeTheme()->setGridEnabled(false);
+
+
 }
 
 SurfaceGraph::~SurfaceGraph()
@@ -82,14 +86,13 @@ void SurfaceGraph::fillSqrtSinProxy()
 void SurfaceGraph::enableSqrtSinModel(bool enable)
 {
     if (enable) {
-        m_sqrtSinSeries->setDrawMode(QSurface3DSeries::DrawSurfaceAndWireframe);
+        m_sqrtSinSeries->setDrawMode(QSurface3DSeries::DrawSurface);
         m_sqrtSinSeries->setItemLabelVisible(false);
         m_sqrtSinSeries->setFlatShadingEnabled(false);
 
-
-        m_graph->axisX()->setRange(.0f, 50.0f);
-        m_graph->axisY()->setRange(.0f, 10.0f);
-        m_graph->axisZ()->setRange(.0f, 50.0f);
+        m_graph->axisX()->setRange(.0f, 100.0f);
+        m_graph->axisY()->setRange(.0f, .25f);
+        m_graph->axisZ()->setRange(.0f, 100.0f);
         m_graph->setShadowQuality(QAbstract3DGraph::ShadowQualityNone);
         m_graph->setReflection(false);
 

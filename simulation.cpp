@@ -5,7 +5,7 @@
 
 #include <QtCore/qmath.h>
 
-const int grid_size = 100;			//size of simulation grid
+const int grid_size = 200;			//size of simulation grid
 
 Simulation::Simulation()
 {
@@ -190,4 +190,34 @@ SimulationData Simulation::get_data()
     data->velocity_y = vy;
     data->grid_size = grid_size;
     return *data;
+}
+
+void Simulation::drag(int X, int Y, float dx, float dy)
+{
+    int around = 3;
+
+    fx[X * grid_size + Y] += dy;
+    fy[X * grid_size + Y] += dx;
+    rho[X * grid_size + Y] = 15.0f;
+
+    int x, y;
+
+
+    for(x = -around; x < around; x++) {
+        for(y = -around; y < around; y++) {
+            int xRC = rotateClamp(x + X, 0, grid_size);
+            int yRC = rotateClamp(y + Y, 0, grid_size);
+            rho[xRC * grid_size + yRC] = 0.3f - 0.3f * sqrt(pow(abs(x), 2) + pow(abs(y), 2))/pow(around, 2);
+        }
+    }
+}
+
+int Simulation::rotateClamp(int x, int min, int max)
+{
+    if(x < min)
+        return max - (min - x);
+    else if(x > max)
+        return (x - max) + min;
+    else
+        return x;
 }

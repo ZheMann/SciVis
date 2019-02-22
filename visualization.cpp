@@ -30,11 +30,11 @@ void Visualization::Start()
 void Visualization::Update()
 {
     //Apply demo forces
-    int i,j;
-    for(int i =0; i < 25; i++){
-        simulation->set_input_force_x(i*2,0);
-        simulation->set_input_force_y(0,i * 4 -1);
-    }
+//    int i;
+//    for(int i =0; i < 25; i++){
+//        simulation->set_input_force_x(i,0);
+//        simulation->set_input_force_y(i,0);
+//    }
 
     //Simulation and visualization
     simulation->do_one_simulation_step();

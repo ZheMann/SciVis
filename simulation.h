@@ -14,7 +14,7 @@ public:
     explicit Simulation();
     void do_one_simulation_step(void);
     SimulationData get_data();
-
+    void drag(int X, int Y, float dx, float dy);
     void set_input_force_x(int x,int y);
     void set_input_force_y(int x,int y);
 private:
@@ -34,7 +34,8 @@ private:
     void solve(int n, fftw_real* vx, fftw_real* vy, fftw_real* vx0, fftw_real* vy0, fftw_real visc, fftw_real dt);
     void diffuse_matter(int n, fftw_real *vx, fftw_real *vy, fftw_real *rho, fftw_real *rho0, fftw_real dt);
     void set_forces(void);
-    void drag(int mx, int my);
+
+    int rotateClamp(int x, int min, int max);
 
 signals:
 

@@ -28,9 +28,6 @@ int main(int argc, char **argv)
     Q3DSurface *graph = new Q3DSurface();
     QWidget *container = QWidget::createWindowContainer(graph);
 
-    InputHandler *input_handler = new InputHandler();
-    graph->setActiveInputHandler(input_handler);
-
     //Example code for displaying the graph
     if (!graph->hasContext()) {
         QMessageBox msgBox;
@@ -207,7 +204,14 @@ int main(int argc, char **argv)
 
     Simulation *simulation = new Simulation();
     Visualization *visualization = new Visualization(modifier, simulation);
+    InputHandler *input_handler = new InputHandler(graph, simulation);
+    graph->setActiveInputHandler(input_handler);
     visualization->Start();
+
+
+    QObject::connect(input_handler, &InputHandler::dragged,
+                     simulation, &Simulation::drag);
+
 
     return app.exec();
 }
