@@ -2,16 +2,21 @@
 #include "simulation.h"
 #include "simulationdata.h"
 #include <QtDataVisualization>
+#include "scattergraph.h"
+
 
 
 using namespace QtDataVisualization;
 
 
 
-Visualization::Visualization(SurfaceGraph *surfaceGraph, Simulation *simulation)
+Visualization::Visualization(SurfaceGraph *surfaceGraph, Simulation *simulation, ScatterGraph *scatterGraph): arrows(new QScatter3DSeries), arrowsArray(0)
 {
     this->simulation = simulation;
     this->surfaceGraph = surfaceGraph;
+
+
+
 }
 
 void Visualization::Start()
@@ -45,9 +50,10 @@ void Visualization::Update()
 
 void Visualization::Visualize(SimulationData data)
 {
-    QSurfaceDataArray *surfaceData = ConvertSimulationDataToQSurfaceDataArray(data);
+    QSurfaceDataArray * surfaceData = ConvertSimulationDataToQSurfaceDataArray(data);
 
     surfaceGraph->SetArrayData(surfaceData);
+
 }
 
 QSurfaceDataArray * Visualization::ConvertSimulationDataToQSurfaceDataArray(SimulationData data)

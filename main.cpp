@@ -14,6 +14,7 @@
 #include <QtGui/QPainter>
 #include <QtGui/QScreen>
 
+
 #include <QtDataVisualization/Q3DInputHandler>
 
 #include "simulation.h"
@@ -145,9 +146,50 @@ int main(int argc, char **argv)
     gradientGtoRPB->setIcon(QIcon(pm));
     gradientGtoRPB->setIconSize(QSize(24, 100));
 
+
+    QLinearGradient grRainbow(0,0,1,100);
+    grRainbow.setColorAt(0.0, Qt::blue);
+    grRainbow.setColorAt(0.25, Qt::cyan);
+    grRainbow.setColorAt(0.5, Qt::green);
+    grRainbow.setColorAt(.75, Qt::yellow);
+    grRainbow.setColorAt(1, Qt::red);
+    pmp.setBrush(QBrush(grRainbow));
+    pmp.drawRect(0, 0, 24, 100);
+
+    QPushButton *gradientRainbowButton = new QPushButton(widget);
+    gradientRainbowButton->setIcon(QIcon(pm));
+    gradientRainbowButton->setIconSize(QSize(24, 100));
+
+
+    QLinearGradient grHeatmap(0,0,1,100);
+    grHeatmap.setColorAt(0.0, Qt::blue);
+    grHeatmap.setColorAt(0.5, Qt::white);
+    grHeatmap.setColorAt(1, Qt::red);
+    pmp.setBrush(QBrush(grHeatmap));
+    pmp.drawRect(0, 0, 24, 100);
+    QPushButton *gradientHeatmapPressedButton = new QPushButton(widget);
+    gradientHeatmapPressedButton->setIcon(QIcon(pm));
+    gradientHeatmapPressedButton->setIconSize(QSize(24, 100));
+
+
+
+    QLinearGradient grHeatmapRed(0, 0, 1, 100);
+    grHeatmapRed.setColorAt(0.0, Qt::darkRed);
+    grHeatmapRed.setColorAt(0.5, Qt::red);
+    grHeatmapRed.setColorAt(1, Qt::white);
+    pmp.setBrush(QBrush(grHeatmapRed));
+    pmp.drawRect(0, 0, 24, 100);
+    QPushButton *gradientHeatmapRedPressedButton = new QPushButton(widget);
+    gradientHeatmapRedPressedButton->setIcon(QIcon(pm));
+    gradientHeatmapRedPressedButton->setIconSize(QSize(24, 100));
+
+
     QHBoxLayout *colorHBox = new QHBoxLayout;
     colorHBox->addWidget(gradientBtoYPB);
     colorHBox->addWidget(gradientGtoRPB);
+    colorHBox->addWidget(gradientRainbowButton);
+    colorHBox->addWidget(gradientHeatmapPressedButton);
+    colorHBox->addWidget(gradientHeatmapRedPressedButton);
     colorGroupBox->setLayout(colorHBox);
 
     vLayout->addWidget(modelGroupBox);
@@ -193,6 +235,14 @@ int main(int argc, char **argv)
     QObject::connect(gradientGtoRPB, &QPushButton::pressed,
                      modifier, &SurfaceGraph::setGreenToRedGradient);
 
+    QObject::connect(gradientRainbowButton, &QPushButton::pressed,
+                     modifier, &SurfaceGraph::setRainbowGradient);
+    QObject::connect(gradientHeatmapPressedButton, &QPushButton::pressed,
+                     modifier, &SurfaceGraph::setHeatmapGradient);
+    QObject::connect(gradientHeatmapRedPressedButton, &QPushButton::pressed,
+                     modifier, &SurfaceGraph::setHeatmapRedGradient);
+
+
     modifier->setAxisMinSliderX(axisMinSliderX);
     modifier->setAxisMaxSliderX(axisMaxSliderX);
     modifier->setAxisMinSliderZ(axisMinSliderZ);
@@ -203,9 +253,9 @@ int main(int argc, char **argv)
     themeList->setCurrentIndex(2);
 
     Simulation *simulation = new Simulation();
-    Visualization *visualization = new Visualization(modifier, simulation);
     InputHandler *input_handler = new InputHandler(graph, simulation);
     graph->setActiveInputHandler(input_handler);
+    Visualization *visualization = new Visualization(modifier, simulation);
     visualization->Start();
 
 

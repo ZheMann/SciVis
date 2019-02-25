@@ -181,7 +181,8 @@ SOURCES += \
     surfacegraph.cpp \
     visualization.cpp \
     simulationdata.cpp \
-    inputhandler.cpp
+    inputhandler.cpp \
+    scattergraph.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -196,7 +197,8 @@ HEADERS += \
     surfacegraph.h \
     visualization.h \
     simulationdata.h \
-    inputhandler.h
+    inputhandler.h \
+    scattergraph.h
 
 FORMS += \
         mainwindow.ui
@@ -208,7 +210,8 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 DISTFILES += \
     fftw-2.1.3/fftw/stamp-h1.in \
-    fftw-2.1.3/fftw/stamp-h2.in
+    fftw-2.1.3/fftw/stamp-h2.in \
+    Resources/narrowarrow.obj
 
 INCLUDEPATH += $$PWD/library
 DEPENDPATH += $$PWD/library

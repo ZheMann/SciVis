@@ -12,6 +12,7 @@ const float m_speedmodifier = 20.0f;
 
 InputHandler::~InputHandler()
 {
+
 }
 
 InputHandler::InputHandler(Q3DSurface *graph, QObject *parent) :
@@ -20,6 +21,9 @@ InputHandler::InputHandler(Q3DSurface *graph, QObject *parent) :
     speedModifier(15.0f),
     m_graph(graph)
 {
+//    this->setRotationEnabled(false);
+//    this->setZoomEnabled(false);
+
     // Connect to the item selection signal from graph
     connect(
         graph, &QAbstract3DGraph::selectedElementChanged,

@@ -6,6 +6,7 @@
 #include <QtDataVisualization/QHeightMapSurfaceDataProxy>
 #include <QtDataVisualization/QSurface3DSeries>
 #include <QtDataVisualization/Q3DInputHandler>
+#include <QtDataVisualization>
 #include <QtWidgets/QSlider>
 
 using namespace QtDataVisualization;
@@ -31,6 +32,9 @@ public:
 
     void setBlackToYellowGradient();
     void setGreenToRedGradient();
+    void setRainbowGradient();
+    void setHeatmapGradient();
+    void setHeatmapRedGradient();
 
     void setAxisMinSliderX(QSlider *slider) { m_axisMinSliderX = slider; }
     void setAxisMaxSliderX(QSlider *slider) { m_axisMaxSliderX = slider; }
@@ -52,6 +56,7 @@ private:
     QSurface3DSeries *m_heightMapSeries;
     QSurface3DSeries *m_sqrtSinSeries;
     Q3DInputHandler *input_handler;
+
 
     QSlider *m_axisMinSliderX;
     QSlider *m_axisMaxSliderX;
