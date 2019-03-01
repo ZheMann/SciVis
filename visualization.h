@@ -14,7 +14,7 @@ class Visualization : public QObject
 {
     Q_OBJECT
 public:
-    explicit Visualization(SurfaceGraph *surfaceGraph= nullptr, Simulation *simulation = nullptr, ScatterGraph *scatter = nullptr);
+    explicit Visualization(SurfaceGraph *surfaceGraph= nullptr, Simulation *simulation = nullptr);
     void Start();
 
 private:

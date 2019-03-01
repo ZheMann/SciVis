@@ -10,11 +10,10 @@ using namespace QtDataVisualization;
 
 
 
-Visualization::Visualization(Simulation *simulation)
+Visualization::Visualization(SurfaceGraph *surfacegraph, Simulation *simulation)
 {
     this->simulation = simulation;
-    this->surfaceGraph = surfaceGraph;
-
+    this->surfaceGraph = surfacegraph;
 
 
 }
