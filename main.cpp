@@ -52,63 +52,6 @@ int main(int argc, char **argv)
 
     widget->setWindowTitle(QStringLiteral("2D Smoke simulation"));
 
-    QGroupBox *modelGroupBox = new QGroupBox(QStringLiteral("Model"));
-
-    QRadioButton *sqrtSinModelRB = new QRadioButton(widget);
-    sqrtSinModelRB->setText(QStringLiteral("Sqrt && Sin"));
-    sqrtSinModelRB->setChecked(false);
-
-    QRadioButton *heightMapModelRB = new QRadioButton(widget);
-    heightMapModelRB->setText(QStringLiteral("Height Map"));
-    heightMapModelRB->setChecked(false);
-
-    QVBoxLayout *modelVBox = new QVBoxLayout;
-    modelVBox->addWidget(sqrtSinModelRB);
-    modelVBox->addWidget(heightMapModelRB);
-    modelGroupBox->setLayout(modelVBox);
-
-    QGroupBox *selectionGroupBox = new QGroupBox(QStringLiteral("Selection Mode"));
-
-    QRadioButton *modeNoneRB = new QRadioButton(widget);
-    modeNoneRB->setText(QStringLiteral("No selection"));
-    modeNoneRB->setChecked(false);
-
-    QRadioButton *modeItemRB = new QRadioButton(widget);
-    modeItemRB->setText(QStringLiteral("Item"));
-    modeItemRB->setChecked(false);
-
-    QRadioButton *modeSliceRowRB = new QRadioButton(widget);
-    modeSliceRowRB->setText(QStringLiteral("Row Slice"));
-    modeSliceRowRB->setChecked(false);
-
-    QRadioButton *modeSliceColumnRB = new QRadioButton(widget);
-    modeSliceColumnRB->setText(QStringLiteral("Column Slice"));
-    modeSliceColumnRB->setChecked(false);
-
-    QVBoxLayout *selectionVBox = new QVBoxLayout;
-    selectionVBox->addWidget(modeNoneRB);
-    selectionVBox->addWidget(modeItemRB);
-    selectionVBox->addWidget(modeSliceRowRB);
-    selectionVBox->addWidget(modeSliceColumnRB);
-    selectionGroupBox->setLayout(selectionVBox);
-
-    QSlider *axisMinSliderX = new QSlider(Qt::Horizontal, widget);
-    axisMinSliderX->setMinimum(0);
-    axisMinSliderX->setTickInterval(1);
-    axisMinSliderX->setEnabled(true);
-    QSlider *axisMaxSliderX = new QSlider(Qt::Horizontal, widget);
-    axisMaxSliderX->setMinimum(1);
-    axisMaxSliderX->setTickInterval(1);
-    axisMaxSliderX->setEnabled(true);
-    QSlider *axisMinSliderZ = new QSlider(Qt::Horizontal, widget);
-    axisMinSliderZ->setMinimum(0);
-    axisMinSliderZ->setTickInterval(1);
-    axisMinSliderZ->setEnabled(true);
-    QSlider *axisMaxSliderZ = new QSlider(Qt::Horizontal, widget);
-    axisMaxSliderZ->setMinimum(1);
-    axisMaxSliderZ->setTickInterval(1);
-    axisMaxSliderZ->setEnabled(true);
-
     QComboBox *themeList = new QComboBox(widget);
     themeList->addItem(QStringLiteral("Qt"));
     themeList->addItem(QStringLiteral("Primary Colors"));
@@ -192,70 +135,38 @@ int main(int argc, char **argv)
     colorHBox->addWidget(gradientHeatmapRedPressedButton);
     colorGroupBox->setLayout(colorHBox);
 
-    vLayout->addWidget(modelGroupBox);
-    vLayout->addWidget(selectionGroupBox);
-    vLayout->addWidget(new QLabel(QStringLiteral("Column range")));
-    vLayout->addWidget(axisMinSliderX);
-    vLayout->addWidget(axisMaxSliderX);
-    vLayout->addWidget(new QLabel(QStringLiteral("Row range")));
-    vLayout->addWidget(axisMinSliderZ);
-    vLayout->addWidget(axisMaxSliderZ);
     vLayout->addWidget(new QLabel(QStringLiteral("Theme")));
     vLayout->addWidget(themeList);
     vLayout->addWidget(colorGroupBox);
 
     widget->show();
 
-    SurfaceGraph *modifier = new SurfaceGraph(graph);
+    SurfaceGraph *m_graph = new SurfaceGraph(graph);
 
-    QObject::connect(heightMapModelRB, &QRadioButton::toggled,
-                     modifier, &SurfaceGraph::enableHeightMapModel);
-    QObject::connect(sqrtSinModelRB, &QRadioButton::toggled,
-                     modifier, &SurfaceGraph::enableSqrtSinModel);
-    QObject::connect(modeNoneRB, &QRadioButton::toggled,
-                     modifier, &SurfaceGraph::toggleModeNone);
-    QObject::connect(modeItemRB,  &QRadioButton::toggled,
-                     modifier, &SurfaceGraph::toggleModeItem);
-    QObject::connect(modeSliceRowRB,  &QRadioButton::toggled,
-                     modifier, &SurfaceGraph::toggleModeSliceRow);
-    QObject::connect(modeSliceColumnRB,  &QRadioButton::toggled,
-                     modifier, &SurfaceGraph::toggleModeSliceColumn);
-    QObject::connect(axisMinSliderX, &QSlider::valueChanged,
-                     modifier, &SurfaceGraph::adjustXMin);
-    QObject::connect(axisMaxSliderX, &QSlider::valueChanged,
-                     modifier, &SurfaceGraph::adjustXMax);
-    QObject::connect(axisMinSliderZ, &QSlider::valueChanged,
-                     modifier, &SurfaceGraph::adjustZMin);
-    QObject::connect(axisMaxSliderZ, &QSlider::valueChanged,
-                     modifier, &SurfaceGraph::adjustZMax);
     QObject::connect(themeList, SIGNAL(currentIndexChanged(int)),
-                     modifier, SLOT(changeTheme(int)));
+                     m_graph, SLOT(changeTheme(int)));
     QObject::connect(gradientBtoYPB, &QPushButton::pressed,
-                     modifier, &SurfaceGraph::setBlackToYellowGradient);
+                     m_graph, &SurfaceGraph::setBlackToYellowGradient);
     QObject::connect(gradientGtoRPB, &QPushButton::pressed,
-                     modifier, &SurfaceGraph::setGreenToRedGradient);
+                     m_graph, &SurfaceGraph::setGreenToRedGradient);
 
     QObject::connect(gradientRainbowButton, &QPushButton::pressed,
-                     modifier, &SurfaceGraph::setRainbowGradient);
+                     m_graph, &SurfaceGraph::setRainbowGradient);
     QObject::connect(gradientHeatmapPressedButton, &QPushButton::pressed,
-                     modifier, &SurfaceGraph::setHeatmapGradient);
+                     m_graph, &SurfaceGraph::setHeatmapGradient);
     QObject::connect(gradientHeatmapRedPressedButton, &QPushButton::pressed,
-                     modifier, &SurfaceGraph::setHeatmapRedGradient);
+                     m_graph, &SurfaceGraph::setHeatmapRedGradient);
 
-
-    modifier->setAxisMinSliderX(axisMinSliderX);
-    modifier->setAxisMaxSliderX(axisMaxSliderX);
-    modifier->setAxisMinSliderZ(axisMinSliderZ);
-    modifier->setAxisMaxSliderZ(axisMaxSliderZ);
-
-    sqrtSinModelRB->setChecked(true);
-    modeItemRB->setChecked(true);
     themeList->setCurrentIndex(2);
+
+
+    m_graph->enableSqrtSinModel(true);
+    m_graph->toggleModeItem();
 
     Simulation *simulation = new Simulation();
     InputHandler *input_handler = new InputHandler(graph, simulation);
     graph->setActiveInputHandler(input_handler);
-    Visualization *visualization = new Visualization(modifier, simulation);
+    Visualization *visualization = new Visualization(m_graph, simulation);
     visualization->Start();
 
 

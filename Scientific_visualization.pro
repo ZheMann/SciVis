@@ -211,7 +211,11 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 DISTFILES += \
     fftw-2.1.3/fftw/stamp-h1.in \
     fftw-2.1.3/fftw/stamp-h2.in \
-    Resources/narrowarrow.obj
+    Resources/narrowarrow.obj \
+    mesh/narrowarrow.obj
 
 INCLUDEPATH += $$PWD/library
 DEPENDPATH += $$PWD/library
+
+RESOURCES += \
+    Scientific_visualization.qrc

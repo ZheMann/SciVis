@@ -195,12 +195,12 @@ SimulationData Simulation::get_data()
 }
 
 void Simulation::drag(int X, int Y, float dx, float dy)
-{
-    int around = 3;
-
-    fx[X * grid_size + Y] += dy;
+{ fx[X * grid_size + Y] += dy;
     fy[X * grid_size + Y] += dx;
     rho[X * grid_size + Y] = 15.0f;
+    int around = 3;
+
+
 
     int x, y;
 

@@ -10,7 +10,7 @@ using namespace QtDataVisualization;
 
 
 
-Visualization::Visualization(SurfaceGraph *surfaceGraph, Simulation *simulation, ScatterGraph *scatterGraph): arrows(new QScatter3DSeries), arrowsArray(0)
+Visualization::Visualization(Simulation *simulation)
 {
     this->simulation = simulation;
     this->surfaceGraph = surfaceGraph;
