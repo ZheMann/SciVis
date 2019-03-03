@@ -1,3 +1,7 @@
+#include <iostream>     // std::cout
+#include <algorithm>    // std::minmax_element
+#include <array>        // std::array
+
 #include "visualization.h"
 #include "simulation.h"
 #include "simulationdata.h"
@@ -33,14 +37,6 @@ void Visualization::Start()
 
 void Visualization::Update()
 {
-    //Apply demo forces
-//    int i;
-//    for(int i =0; i < 25; i++){
-//        simulation->set_input_force_x(i,0);
-//        simulation->set_input_force_y(i,0);
-//    }
-
-    //Simulation and visualization
     simulation->do_one_simulation_step();
     SimulationData data = simulation->get_data();
 
@@ -50,6 +46,23 @@ void Visualization::Update()
 void Visualization::Visualize(SimulationData data)
 {
     QSurfaceDataArray * surfaceData = ConvertSimulationDataToQSurfaceDataArray(data);
+
+    float min = 1;
+    float max = 0;
+    for (int i = 0; i < data.grid_size * data.grid_size; ++i) {
+        float value = data.density[i];
+        if( value > max)
+        {
+            max = value;
+        }
+        if( value < min)
+        {
+            min = value;
+        }
+    }
+
+    //TODO: Insert rolling average clamp
+    surfaceGraph->setClamp(min, max);
 
     surfaceGraph->SetArrayData(surfaceData);
 

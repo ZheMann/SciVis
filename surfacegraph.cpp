@@ -82,8 +82,10 @@ void SurfaceGraph::fillSqrtSinProxy()
     }
 
     m_graph_data->resetArray(dataArray);
+}
 
-
+void SurfaceGraph::setClamp(float min, float max){
+    m_graph->axisY()->setRange(min, max);
 }
 
 void SurfaceGraph::enableSqrtSinModel(bool enable)
@@ -92,6 +94,7 @@ void SurfaceGraph::enableSqrtSinModel(bool enable)
         m_sqrtSinSeries->setDrawMode(QSurface3DSeries::DrawSurface);
         m_sqrtSinSeries->setItemLabelVisible(false);
         m_sqrtSinSeries->setFlatShadingEnabled(false);
+
 
         m_graph->axisX()->setRange(.0f, 50.0f);
         m_graph->axisY()->setRange(.0f, .25f);

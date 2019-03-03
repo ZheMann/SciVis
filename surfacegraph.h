@@ -24,6 +24,8 @@ public:
 
     void toggleModeItem() { m_graph->setSelectionMode(QAbstract3DGraph::SelectionItem); }
 
+    void setClamp(float min, float max);
+
     void setBlackToYellowGradient();
     void setGreenToRedGradient();
     void setRainbowGradient();
