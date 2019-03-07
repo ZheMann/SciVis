@@ -14,7 +14,9 @@ using namespace QtDataVisualization;
 
 
 
-Visualization::Visualization(SurfaceGraph *surfacegraph, Simulation *simulation)
+Visualization::Visualization(SurfaceGraph *surfacegraph, Simulation *simulation):
+    hist_counter(0),
+    clamp_threshold(0)
 {
     this->simulation = simulation;
     this->surfaceGraph = surfacegraph;
@@ -60,9 +62,22 @@ void Visualization::Visualize(SimulationData data)
             min = value;
         }
     }
+    int index = hist_counter % 10;
+    this->min_history[index] = min;
+    this->max_history[index] = max;
+    this->hist_counter++;
 
-    //TODO: Insert rolling average clamp
-    surfaceGraph->setClamp(min, max);
+    float avg_max = std::accumulate(this->max_history.begin(), max_history.end(), 0.0f) / max_history.size();
+    float avg_min = std::accumulate(this->min_history.begin(), min_history.end(), 0.0f) / min_history.size();
+
+    if (hist_counter > 10)
+    {
+        surfaceGraph->setClamp(avg_min + this->clamp_threshold, avg_max - this->clamp_threshold);
+    }
+    else
+    {
+        surfaceGraph->setClamp(min + this->clamp_threshold, max - this->clamp_threshold);
+    }
 
     surfaceGraph->SetArrayData(surfaceData);
 

@@ -24,6 +24,12 @@ private:
     QScatter3DSeries * arrows;
     QScatterDataArray * arrowsArray;
 
+    std::array<float, 10> min_history;
+    std::array<float, 10> max_history;
+    int hist_counter;
+
+    float clamp_threshold;
+
     void Visualize(SimulationData data);
     QSurfaceDataArray * ConvertSimulationDataToQSurfaceDataArray(SimulationData data);
 
