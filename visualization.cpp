@@ -70,13 +70,17 @@ void Visualization::Visualize(SimulationData data)
     float avg_max = std::accumulate(this->max_history.begin(), max_history.end(), 0.0f) / max_history.size();
     float avg_min = std::accumulate(this->min_history.begin(), min_history.end(), 0.0f) / min_history.size();
 
-    if (hist_counter > 10)
+
+    if (hist_counter > 10 && (avg_min > 0 && avg_max > 0 ))
     {
-        surfaceGraph->setClamp(avg_min + this->clamp_threshold, avg_max - this->clamp_threshold);
+        double min_clamp = avg_max * (1 + this->clamp_threshold);
+        double max_clamp = avg_min * (1 - this->clamp_threshold);
+
+        surfaceGraph->setClamp(min_clamp, max_clamp );
     }
-    else
+    else if ((min > 0 && max > 0 ))
     {
-        surfaceGraph->setClamp(min + this->clamp_threshold, max - this->clamp_threshold);
+        surfaceGraph->setClamp(min * (1 + this->clamp_threshold), max * (1 - this->clamp_threshold));
     }
 
     surfaceGraph->SetArrayData(surfaceData);
@@ -107,4 +111,11 @@ QSurfaceDataArray * Visualization::ConvertSimulationDataToQSurfaceDataArray(Simu
     return dataArray;
 }
 
+void Visualization::setClampingThreshold(int threshold)
+{
+    qDebug("threshold: %i", threshold);
+
+    this->clamp_threshold = threshold / 100.0;
+
+}
 

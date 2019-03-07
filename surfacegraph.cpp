@@ -33,6 +33,12 @@ SurfaceGraph::SurfaceGraph(Q3DSurface *surface)
     m_graph->setAxisY(new QValue3DAxis);
     m_graph->setAxisZ(new QValue3DAxis);
 
+    m_graph->setReflection(false);
+    m_graph->activeTheme()->setType(Q3DTheme::ThemeEbony);
+    m_graph->activeTheme()->setGridEnabled(false);
+    m_graph->activeTheme()->setBackgroundEnabled(false);
+    m_graph->activeTheme()->setLabelTextColor("transparent");
+
     m_graph_data = new QSurfaceDataProxy();
     m_sqrtSinSeries = new QSurface3DSeries(m_graph_data);
 
@@ -41,11 +47,6 @@ SurfaceGraph::SurfaceGraph(Q3DSurface *surface)
 
     m_graph ->setReflectivity(0);
 
-    m_graph->setReflection(false);
-    m_graph->activeTheme()->setType(Q3DTheme::ThemeEbony);
-    m_graph->activeTheme()->setGridEnabled(false);
-    m_graph->activeTheme()->setBackgroundEnabled(false);
-    m_graph->activeTheme()->setLabelTextColor("transparent");
 
 }
 

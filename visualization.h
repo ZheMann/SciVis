@@ -28,7 +28,7 @@ private:
     std::array<float, 10> max_history;
     int hist_counter;
 
-    float clamp_threshold;
+    double clamp_threshold;
 
     void Visualize(SimulationData data);
     QSurfaceDataArray * ConvertSimulationDataToQSurfaceDataArray(SimulationData data);
@@ -37,6 +37,8 @@ signals:
 
 public slots:
     void Update();
+    void setClampingThreshold(int threshold);
+
 };
 
 #endif // VISUALIZATION_H

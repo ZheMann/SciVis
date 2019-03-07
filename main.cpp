@@ -135,9 +135,15 @@ int main(int argc, char **argv)
     colorHBox->addWidget(gradientHeatmapRedPressedButton);
     colorGroupBox->setLayout(colorHBox);
 
+    QSlider *clampThresholdSlider = new QSlider(Qt::Horizontal, widget);
+    clampThresholdSlider->setRange(0,100);
+    clampThresholdSlider->setTickInterval(25);
+    clampThresholdSlider->setTickPosition(QSlider::TicksAbove);
+
     vLayout->addWidget(new QLabel(QStringLiteral("Theme")));
     vLayout->addWidget(themeList);
     vLayout->addWidget(colorGroupBox);
+    vLayout->addWidget(clampThresholdSlider);
 
     widget->show();
 
@@ -173,6 +179,7 @@ int main(int argc, char **argv)
     QObject::connect(input_handler, &InputHandler::dragged,
                      simulation, &Simulation::drag);
 
+    QObject::connect(clampThresholdSlider, SIGNAL(valueChanged(int)), visualization, SLOT(setClampingThreshold(int)));
 
     return app.exec();
 }
