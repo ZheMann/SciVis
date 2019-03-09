@@ -71,12 +71,15 @@ void Visualization::Visualize(SimulationData data)
     float avg_min = std::accumulate(this->min_history.begin(), min_history.end(), 0.0f) / min_history.size();
 
 
-    if (hist_counter > 10 && (avg_min > 0 && avg_max > 0 ))
+    if (hist_counter > 10 && (avg_min > 0 && avg_max > 0 && avg_max <=1))
     {
-        double min_clamp = avg_max * (1 + this->clamp_threshold);
-        double max_clamp = avg_min * (1 - this->clamp_threshold);
-
-        surfaceGraph->setClamp(min_clamp, max_clamp );
+        double max_clamp = avg_max * (1 - this->clamp_threshold);
+        double min_clamp = avg_min * (1 + this->clamp_threshold);
+        if(min_clamp + 0.001 < max_clamp )
+        {
+            qDebug("%f", min_clamp);
+            surfaceGraph->setClamp(min_clamp, max_clamp );
+        }
     }
     else if ((min > 0 && max > 0 ))
     {
