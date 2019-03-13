@@ -1,4 +1,4 @@
-#include <iostream>     // std::cout
+    #include <iostream>     // std::cout
 #include <algorithm>    // std::minmax_element
 #include <array>        // std::array
 
@@ -39,7 +39,7 @@ void Visualization::Update()
 {
     simulation->do_one_simulation_step();
     SimulationData data = simulation->get_data();
-
+    this->surfaceGraph->LoadArrows(data);
     this->Visualize(data);
 }
 
