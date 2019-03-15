@@ -1,4 +1,4 @@
-#include <iostream>     // std::cout
+    #include <iostream>     // std::cout
 #include <algorithm>    // std::minmax_element
 #include <array>        // std::array
 
@@ -14,7 +14,9 @@ using namespace QtDataVisualization;
 
 
 
-Visualization::Visualization(SurfaceGraph *surfacegraph, Simulation *simulation)
+Visualization::Visualization(SurfaceGraph *surfacegraph, Simulation *simulation):
+    hist_counter(0),
+    clamp_threshold(0)
 {
     this->simulation = simulation;
     this->surfaceGraph = surfacegraph;
@@ -39,7 +41,7 @@ void Visualization::Update()
 {
     simulation->do_one_simulation_step();
     SimulationData data = simulation->get_data();
-
+    this->surfaceGraph->LoadArrows(data);
     this->Visualize(data);
 }
 
@@ -60,9 +62,29 @@ void Visualization::Visualize(SimulationData data)
             min = value;
         }
     }
+    int index = hist_counter % 10;
+    this->min_history[index] = min;
+    this->max_history[index] = max;
+    this->hist_counter++;
 
-    //TODO: Insert rolling average clamp
-    surfaceGraph->setClamp(min, max);
+    float avg_max = std::accumulate(this->max_history.begin(), max_history.end(), 0.0f) / max_history.size();
+    float avg_min = std::accumulate(this->min_history.begin(), min_history.end(), 0.0f) / min_history.size();
+
+
+    if (hist_counter > 10 && (avg_min > 0 && avg_max > 0 && avg_max <=1))
+    {
+        double max_clamp = avg_max * (1 - this->clamp_threshold);
+        double min_clamp = avg_min * (1 + this->clamp_threshold);
+        if(min_clamp + 0.001 < max_clamp )
+        {
+            qDebug("%f", min_clamp);
+            surfaceGraph->setClamp(min_clamp, max_clamp );
+        }
+    }
+    else if ((min > 0 && max > 0 ))
+    {
+        surfaceGraph->setClamp(min * (1 + this->clamp_threshold), max * (1 - this->clamp_threshold));
+    }
 
     surfaceGraph->SetArrayData(surfaceData);
 
@@ -92,4 +114,11 @@ QSurfaceDataArray * Visualization::ConvertSimulationDataToQSurfaceDataArray(Simu
     return dataArray;
 }
 
+void Visualization::setClampingThreshold(int threshold)
+{
+    qDebug("threshold: %i", threshold);
+
+    this->clamp_threshold = threshold / 100.0;
+
+}
 

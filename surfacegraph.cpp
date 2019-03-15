@@ -8,6 +8,7 @@
 #include <QtGui/QImage>
 #include <QtCore/qmath.h>
 #include <QColor>
+#include <QDebug>
 
 using namespace QtDataVisualization;
 
@@ -29,17 +30,15 @@ std::string current_gradient = "";
 SurfaceGraph::SurfaceGraph(Q3DSurface *surface)
     : m_graph(surface)
 {
-    QCustom3DItem *arrow = new QCustom3DItem();
-    arrow->setScaling(QVector3D(0.07f, 0.07f, 0.07f));
-    arrow->setMeshFile(QStringLiteral(":/mesh/narrowarrow.obj"));
-    QImage sunColor = QImage(2, 2, QImage::Format_RGB32);
-    sunColor.fill(QColor(0xff, 0xbb, 0x00));
-    arrow->setTextureImage(sunColor);
-    m_graph->addCustomItem(arrow);
-
     m_graph->setAxisX(new QValue3DAxis);
     m_graph->setAxisY(new QValue3DAxis);
     m_graph->setAxisZ(new QValue3DAxis);
+
+    m_graph->setReflection(false);
+    m_graph->activeTheme()->setType(Q3DTheme::ThemeEbony);
+    m_graph->activeTheme()->setGridEnabled(false);
+    m_graph->activeTheme()->setBackgroundEnabled(false);
+    m_graph->activeTheme()->setLabelTextColor("transparent");
 
     m_graph_data = new QSurfaceDataProxy();
     m_sqrtSinSeries = new QSurface3DSeries(m_graph_data);
@@ -48,12 +47,6 @@ SurfaceGraph::SurfaceGraph(Q3DSurface *surface)
     m_graph -> scene()->activeCamera()->setCameraPreset(Q3DCamera::CameraPresetDirectlyAbove);
 
     m_graph ->setReflectivity(0);
-
-    m_graph->setReflection(false);
-    m_graph->activeTheme()->setType(Q3DTheme::ThemeEbony);
-    m_graph->activeTheme()->setGridEnabled(false);
-    m_graph->activeTheme()->setBackgroundEnabled(false);
-    m_graph->activeTheme()->setLabelTextColor("transparent");
 }
 
 SurfaceGraph::~SurfaceGraph()
@@ -89,6 +82,53 @@ void SurfaceGraph::fillSqrtSinProxy()
     }
 
     m_graph_data->resetArray(dataArray);
+
+}
+
+void SurfaceGraph::InitArrows(int gridSize, int nArrows)
+{
+    QQuaternion arrowTilt = QQuaternion::fromEulerAngles(0,90,90);
+
+    for (int i = 0; i <= nArrows; i++)
+    {
+        for(int j = 0; j <= nArrows; j++)
+        {
+            QCustom3DItem *arrow = new QCustom3DItem();
+            arrow->setScaling(QVector3D(0.07f, 0.07f, 0.07f));
+            arrow->setMeshFile(QStringLiteral(":/mesh/narrowarrow.obj"));
+            QImage sunColor = QImage(2, 2, QImage::Format_RGB32);
+            sunColor.fill(QColor(0xff, 0xbb, 0x00));
+            arrow->setTextureImage(sunColor);
+            arrow->setRotation(arrowTilt);
+            arrow->setPosition(QVector3D( (i + .5f) * float(gridSize)/float(nArrows + 1), 0, (j + .5f) * float(gridSize)/float(nArrows + 1) ));
+            m_arrows.append(arrow);
+            m_graph->addCustomItem(arrow);
+        }
+    }
+}
+
+void SurfaceGraph::LoadArrows(SimulationData data)
+{
+    QCustom3DItem * arrow;
+    for(int i = 0; i < m_arrows.size(); i++)
+    {
+        arrow = m_arrows[i];
+        float * pitch;
+        float * yaw;
+        float * roll;
+        arrow->rotation().getEulerAngles(pitch, yaw, roll);
+        arrow->setRotation(QQuaternion::fromEulerAngles(*pitch, (int(*yaw) + 2) % 360, *roll));
+
+        QVector3D position = arrow->position();
+        int x = position.x();
+        int z = int(position.z());
+
+//        float test = m_graph_data->itemAt(1, 1)->y();
+//        qDebug("%f", test);
+
+        //position.setY(data.density[index]);
+        //arrow->setPosition(position);
+    }
 }
 
 void SurfaceGraph::setClamp(float min, float max){
@@ -115,6 +155,8 @@ void SurfaceGraph::enableSqrtSinModel(bool enable)
         m_graph->axisX()->setLabelAutoRotation(30);
         m_graph->axisY()->setLabelAutoRotation(90);
         m_graph->axisZ()->setLabelAutoRotation(30);
+
+        this->InitArrows(50, 15);
     }
 }
 

@@ -7,7 +7,10 @@
 #include <QtDataVisualization/QSurface3DSeries>
 #include <QtDataVisualization/Q3DInputHandler>
 #include <QtDataVisualization>
+#include <QCustom3DItem>
 #include <QtWidgets/QSlider>
+#include "simulationdata.h"
+#include <array>
 
 using namespace QtDataVisualization;
 
@@ -41,6 +44,9 @@ public:
     void setHeatmapRedGradient();
     void adjustHeatmapRedGradient(int saturation_value);
 
+    void LoadArrows(SimulationData data);
+    void InitArrows(int gridSize, int nArrows);
+
 public Q_SLOTS:
     void changeTheme(int theme);
     void setSaturation(int saturation_value);
@@ -57,6 +63,7 @@ private:
     float m_rangeMinZ;
     float m_stepX;
     float m_stepZ;
+    QList<QCustom3DItem *> m_arrows;
 
 
     void fillSqrtSinProxy();
