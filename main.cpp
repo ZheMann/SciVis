@@ -52,6 +52,9 @@ int main(int argc, char **argv)
 
     widget->setWindowTitle(QStringLiteral("2D Smoke simulation"));
 
+    QSlider *saturation_slider = new QSlider(Qt::Horizontal, widget);
+    saturation_slider->setRange(0, 255);
+
     QComboBox *themeList = new QComboBox(widget);
     themeList->addItem(QStringLiteral("Qt"));
     themeList->addItem(QStringLiteral("Primary Colors"));
@@ -137,6 +140,8 @@ int main(int argc, char **argv)
 
     vLayout->addWidget(new QLabel(QStringLiteral("Theme")));
     vLayout->addWidget(themeList);
+    vLayout->addWidget(new QLabel(QStringLiteral("Saturation")));
+    vLayout->addWidget(saturation_slider);
     vLayout->addWidget(colorGroupBox);
 
     widget->show();
@@ -145,6 +150,9 @@ int main(int argc, char **argv)
 
     QObject::connect(themeList, SIGNAL(currentIndexChanged(int)),
                      m_graph, SLOT(changeTheme(int)));
+    QObject::connect(saturation_slider, SIGNAL(valueChanged(int)),
+                     m_graph, SLOT(setSaturation(int)));
+
     QObject::connect(gradientBtoYPB, &QPushButton::pressed,
                      m_graph, &SurfaceGraph::setBlackToYellowGradient);
     QObject::connect(gradientGtoRPB, &QPushButton::pressed,
@@ -159,6 +167,9 @@ int main(int argc, char **argv)
 
     themeList->setCurrentIndex(2);
 
+    // Value should be initialized with the max value (255) but a higher value than 1
+    // causes a 'index out of range' exception. Therefore we initialize at zero.
+    saturation_slider->setValue(0);
 
     m_graph->enableSqrtSinModel(true);
     m_graph->toggleModeItem();

@@ -1,5 +1,5 @@
 #include "surfacegraph.h"
-
+#include <QTextStream>
 #include <QtDataVisualization/QValue3DAxis>
 #include <QtDataVisualization/Q3DTheme>
 #include <QtDataVisualization/Q3DCamera>
@@ -17,6 +17,14 @@ const int heightMapGridStepX = 6;
 const int heightMapGridStepZ = 6;
 const float sampleMin = -8.0f;
 const float sampleMax = 8.0f;
+
+const std::string blackToYellowGradient = "BTYG";
+const std::string rainbowGradient = "RG";
+const std::string heatmapGradient = "HG";
+const std::string heatmapRedGradient = "HRG";
+const std::string greenToRedGradient = "GRG";
+
+std::string current_gradient = "";
 
 SurfaceGraph::SurfaceGraph(Q3DSurface *surface)
     : m_graph(surface)
@@ -46,7 +54,6 @@ SurfaceGraph::SurfaceGraph(Q3DSurface *surface)
     m_graph->activeTheme()->setGridEnabled(false);
     m_graph->activeTheme()->setBackgroundEnabled(false);
     m_graph->activeTheme()->setLabelTextColor("transparent");
-
 }
 
 SurfaceGraph::~SurfaceGraph()
@@ -95,7 +102,6 @@ void SurfaceGraph::enableSqrtSinModel(bool enable)
         m_sqrtSinSeries->setItemLabelVisible(false);
         m_sqrtSinSeries->setFlatShadingEnabled(false);
 
-
         m_graph->axisX()->setRange(.0f, 50.0f);
         m_graph->axisY()->setRange(.0f, .25f);
         m_graph->axisZ()->setRange(.0f, 50.0f);
@@ -117,13 +123,57 @@ void SurfaceGraph::changeTheme(int theme)
     m_graph->activeTheme()->setType(Q3DTheme::Theme(theme));
 }
 
+void SurfaceGraph::setSaturation(int saturation_value)
+{
+    //qDebug("Value %d", saturation_value);
+
+    if (current_gradient == blackToYellowGradient) {
+        adjustBlackToYellowGradient(saturation_value);
+    } else if (current_gradient == heatmapGradient) {
+        adjustHeatmapGradient(saturation_value);
+    } else if (current_gradient == heatmapRedGradient) {
+        adjustHeatmapRedGradient(saturation_value);
+    } else if (current_gradient == greenToRedGradient) {
+        adjustGreenToRedGradient(saturation_value);
+    } else {
+        // Rainbow
+        adjustRainbowGradient(saturation_value);
+    }
+}
+
+void SurfaceGraph::adjustBlackToYellowGradient(int saturation_value)
+{
+    QLinearGradient gr;
+    gr.setColorAt(0.0, QColor::fromHsv(0, saturation_value, 0));
+    gr.setColorAt(0.33, QColor::fromHsv(240, saturation_value, 255));
+    gr.setColorAt(0.67, QColor::fromHsv(0, saturation_value, 255));
+    gr.setColorAt(1.0, QColor::fromHsv(60, saturation_value, 255));
+
+    m_graph->seriesList().at(0)->setBaseGradient(gr);
+    m_graph->seriesList().at(0)->setColorStyle(Q3DTheme::ColorStyleRangeGradient);
+}
+
 void SurfaceGraph::setBlackToYellowGradient()
 {
     QLinearGradient gr;
-    gr.setColorAt(0.0, Qt::black);
-    gr.setColorAt(0.33, Qt::blue);
-    gr.setColorAt(0.67, Qt::red);
-    gr.setColorAt(1.0, Qt::yellow);
+    gr.setColorAt(0.0, QColor::fromHsv(0, 255, 0));
+    gr.setColorAt(0.33, QColor::fromHsv(240, 255, 255));
+    gr.setColorAt(0.67, QColor::fromHsv(0, 255, 255));
+    gr.setColorAt(1.0, QColor::fromHsv(60, 255, 255));
+
+    current_gradient = blackToYellowGradient;
+
+    m_graph->seriesList().at(0)->setBaseGradient(gr);
+    m_graph->seriesList().at(0)->setColorStyle(Q3DTheme::ColorStyleRangeGradient);
+}
+
+void SurfaceGraph::adjustRainbowGradient(int saturation_value) {
+    QLinearGradient gr;
+    gr.setColorAt(0.0, QColor::fromHsv(240,saturation_value,255));
+    gr.setColorAt(0.25, QColor::fromHsv(180,saturation_value,255));
+    gr.setColorAt(0.5, QColor::fromHsv(120,saturation_value,255));
+    gr.setColorAt(0.75, QColor::fromHsv(60,saturation_value,255));
+    gr.setColorAt(1, QColor::fromHsv(0,saturation_value,255));
 
     m_graph->seriesList().at(0)->setBaseGradient(gr);
     m_graph->seriesList().at(0)->setColorStyle(Q3DTheme::ColorStyleRangeGradient);
@@ -132,12 +182,26 @@ void SurfaceGraph::setBlackToYellowGradient()
 void SurfaceGraph::setRainbowGradient()
 {
     QLinearGradient gr;
-    gr.setColorAt(0.0, Qt::blue);
-    gr.setColorAt(0.25, Qt::cyan);
-    gr.setColorAt(0.5, Qt::green);
-    gr.setColorAt(.75, Qt::yellow);
-    gr.setColorAt(1, Qt::red);
+    gr.setColorAt(0.0, QColor::fromHsv(240,255,255));
+    gr.setColorAt(0.25, QColor::fromHsv(180,255,255));
+    gr.setColorAt(0.5, QColor::fromHsv(120,255,255));
+    gr.setColorAt(0.75, QColor::fromHsv(60,255,255));
+    gr.setColorAt(1, QColor::fromHsv(0,255,255));
 
+    current_gradient = rainbowGradient;
+    m_graph->seriesList().at(0)->setBaseGradient(gr);
+    m_graph->seriesList().at(0)->setColorStyle(Q3DTheme::ColorStyleRangeGradient);
+}
+
+void SurfaceGraph::adjustHeatmapRedGradient(int saturation_value)
+{
+    QLinearGradient gr;
+
+    gr.setColorAt(0.0, QColor::fromHsv(0,saturation_value,128));
+    gr.setColorAt(0.5, QColor::fromHsv(0,saturation_value,255));
+
+    // White needs to stay white so we keep saturation 0
+    gr.setColorAt(1, QColor::fromHsv(0,0,255));
 
     m_graph->seriesList().at(0)->setBaseGradient(gr);
     m_graph->seriesList().at(0)->setColorStyle(Q3DTheme::ColorStyleRangeGradient);
@@ -146,10 +210,25 @@ void SurfaceGraph::setRainbowGradient()
 void SurfaceGraph::setHeatmapRedGradient()
 {
     QLinearGradient gr;
-    gr.setColorAt(0.0, Qt::darkRed);
-    gr.setColorAt(0.5, Qt::red);
-    gr.setColorAt(1, Qt::white);
 
+    gr.setColorAt(0.0, QColor::fromHsv(0,255,128));
+    gr.setColorAt(0.5, QColor::fromHsv(0,255,255));
+    gr.setColorAt(1, QColor::fromHsv(0,0,255));
+
+    current_gradient = heatmapRedGradient;
+    m_graph->seriesList().at(0)->setBaseGradient(gr);
+    m_graph->seriesList().at(0)->setColorStyle(Q3DTheme::ColorStyleRangeGradient);
+}
+
+void SurfaceGraph::adjustHeatmapGradient(int saturation_value)
+{
+    QLinearGradient gr;
+    gr.setColorAt(0.0, QColor::fromHsv(240,saturation_value,255));
+
+    // White needs to stay white so we keep saturation 0
+    gr.setColorAt(0.5, QColor::fromHsv(0,0,255));
+
+    gr.setColorAt(1, QColor::fromHsv(0,saturation_value,255));
 
     m_graph->seriesList().at(0)->setBaseGradient(gr);
     m_graph->seriesList().at(0)->setColorStyle(Q3DTheme::ColorStyleRangeGradient);
@@ -158,23 +237,36 @@ void SurfaceGraph::setHeatmapRedGradient()
 void SurfaceGraph::setHeatmapGradient()
 {
     QLinearGradient gr;
-    gr.setColorAt(0.0, Qt::blue);
-    gr.setColorAt(0.5, Qt::white);
-    gr.setColorAt(1, Qt::red);
+    gr.setColorAt(0.0, QColor::fromHsv(240,255,255));
+    gr.setColorAt(0.5, QColor::fromHsv(0,0,255));
+    gr.setColorAt(1, QColor::fromHsv(0,255,255));
+
+    current_gradient = heatmapGradient;
+    m_graph->seriesList().at(0)->setBaseGradient(gr);
+    m_graph->seriesList().at(0)->setColorStyle(Q3DTheme::ColorStyleRangeGradient);
+}
+
+void SurfaceGraph::adjustGreenToRedGradient(int saturation_value)
+{
+    QLinearGradient gr;
+    gr.setColorAt(0.0, QColor::fromHsv(120,saturation_value,128));
+    gr.setColorAt(0.33, QColor::fromHsv(60,saturation_value,255));
+    gr.setColorAt(0.67, QColor::fromHsv(0,saturation_value,255));
+    gr.setColorAt(1, QColor::fromHsv(0,saturation_value,128));
 
     m_graph->seriesList().at(0)->setBaseGradient(gr);
     m_graph->seriesList().at(0)->setColorStyle(Q3DTheme::ColorStyleRangeGradient);
 }
 
-
 void SurfaceGraph::setGreenToRedGradient()
 {
     QLinearGradient gr;
-    gr.setColorAt(0.0, Qt::darkGreen);
-    gr.setColorAt(0.5, Qt::yellow);
-    gr.setColorAt(0.8, Qt::red);
-    gr.setColorAt(1.0, Qt::darkRed);
+    gr.setColorAt(0.0, QColor::fromHsv(120,255,128));
+    gr.setColorAt(0.33, QColor::fromHsv(60,255,255));
+    gr.setColorAt(0.67, QColor::fromHsv(0,255,255));
+    gr.setColorAt(1, QColor::fromHsv(0,255,128));
 
+    current_gradient = greenToRedGradient;
     m_graph->seriesList().at(0)->setBaseGradient(gr);
     m_graph->seriesList().at(0)->setColorStyle(Q3DTheme::ColorStyleRangeGradient);
 }

@@ -27,13 +27,23 @@ public:
     void setClamp(float min, float max);
 
     void setBlackToYellowGradient();
+    void adjustBlackToYellowGradient(int saturation_value);
+
     void setGreenToRedGradient();
+    void adjustGreenToRedGradient(int saturation_value);
+
     void setRainbowGradient();
+    void adjustRainbowGradient(int saturation_value);
+
     void setHeatmapGradient();
+    void adjustHeatmapGradient(int saturation_value);
+
     void setHeatmapRedGradient();
+    void adjustHeatmapRedGradient(int saturation_value);
 
 public Q_SLOTS:
     void changeTheme(int theme);
+    void setSaturation(int saturation_value);
 
 private:
     Q3DSurface *m_graph;
@@ -47,6 +57,7 @@ private:
     float m_rangeMinZ;
     float m_stepX;
     float m_stepZ;
+
 
     void fillSqrtSinProxy();
 };
